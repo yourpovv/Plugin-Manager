@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\net">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{a1b2c3d4-e5f6-4789-a012-3456789abc06}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\archive.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\builder.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\equicord.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\manifest.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\paths.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\persist.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\plugin.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\runner.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\net\http.cpp">
+      <Filter>src\net</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\log.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\pluginList.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\theme.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\window.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\archive.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\builder.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\equicord.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\http.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\log.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\manifest.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\outcome.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\paths.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\persist.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\plugin.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pluginList.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\runner.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\text.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\theme.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+    <None Include="app.manifest">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="plugins.json">
+      <Filter>resources</Filter>
+    </None>
+  </ItemGroup>
+</Project>

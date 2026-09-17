@@ -1,0 +1,11 @@
+build/
+release/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.res
+*.log
+*.exe
+.vs/

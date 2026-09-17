@@ -1,0 +1,51 @@
+/* 
+surface-0: #1e1f22  surface-1: #2b2d31  surface-2: #313338
+input:     #18191c  border:   #3f4147  divider:  #2e3035
+text-primary: #f2f3f5  text-muted: #b5bac1  text-dim: #80848e
+accent: #5865f2  accent-hover:#4752c4  accent-press:#3b44a3
+success:#23a559  warning:#f0b232  danger:#da373c
+focus: #5865f2  radius 8px  spacing 4px scale
+*/
+
+QMainWindow { background: #1e1f22; }
+QWidget { color: #f2f3f5; }
+QMenuBar { background: #2b2d31; color: #f2f3f5; border-bottom: 1px solid #2e3035; }
+QMenuBar::item:selected { background: #313338; }
+QMenu { background: #2b2d31; color: #f2f3f5; border: 1px solid #3f4147; }
+QMenu::item:selected { background: #404249; }
+QStatusBar { background: #2b2d31; border-top: 1px solid #2e3035; color: #b5bac1; }
+QStatusBar::item { border: none; }
+QGroupBox { border: 1px solid #2e3035; border-radius: 8px; margin-top: 8px; padding-top: 10px; color: #b5bac1; }
+QGroupBox::title { subcontrol-origin: margin; left: 12px; color: #b5bac1; font-size: 11px; padding: 0 4px; }
+QLineEdit, QComboBox { background: #18191c; color: #f2f3f5; border: 1px solid #3f4147; border-radius: 8px; padding: 6px 10px; min-height: 20px; selection-background-color: #5865f2; }
+QLineEdit:focus, QComboBox:focus, QToolButton:focus, QPushButton:focus { border: 1px solid #5865f2; }
+QLineEdit[error="true"] { border: 1px solid #da373c; }
+QComboBox::drop-down { border: none; width: 20px; }
+QComboBox::down-arrow { image: none; }
+QComboBox QAbstractItemView { background: #2b2d31; color: #f2f3f5; selection-background-color: #404249; border: 1px solid #3f4147; }
+QPushButton[primary="true"] { background: #5865f2; color: #fff; border: none; border-radius: 8px; padding: 0 16px; min-height: 32px; font-weight: 600; }
+QPushButton[primary="true"]:hover { background: #4752c4; }
+QPushButton[primary="true"]:pressed { background: #3b44a3; }
+QPushButton[primary="true"]:disabled { background: #2b2d31; color: #80848e; }
+QPushButton[secondary="true"], QToolButton { background: #2b2d31; color: #f2f3f5; border: 1px solid #3f4147; border-radius: 8px; min-height: 32px; padding: 0 12px; }
+/* a line edit's inline clear button is a QToolButton too, and the rule above gave it a
+   32px bordered box that sat off-centre. Reset it back to a bare icon. */
+QLineEdit QToolButton { background: transparent; border: none; border-radius: 0; min-height: 0; min-width: 0; padding: 0; margin: 0; }
+QPushButton[secondary="true"]:hover, QToolButton:hover { background: #35373c; }
+QToolButton:checked { background: #5865f2; border: 1px solid #5865f2; color: #fff; }
+QPushButton[tertiary="true"] { background: transparent; border: none; color: #b5bac1; min-height: 32px; }
+QPushButton[destructive="true"] { background: #da373c; color: #fff; border: none; border-radius: 8px; min-height: 32px; }
+#emptyPage { border: 1px dashed #3f4147; border-radius: 12px; background: #2b2d31; }
+#emptyPage[dragOver="true"] { border: 2px dashed #5865f2; background: #313338; }
+QScrollArea { border: none; background: transparent; }
+QScrollArea > QWidget > QWidget { background: transparent; }
+QProgressBar { background: #2b2d31; border: none; border-radius: 3px; max-height: 6px; }
+QProgressBar::chunk { background: #5865f2; border-radius: 3px; }
+QLabel[warning="true"] { color: #f0b232; }
+QLabel[success="true"] { color: #23a559; }
+QLabel[error="true"] { color: #da373c; }
+QLabel#dropHint { color: #80848e; font-size: 13px; }
+QLabel#countLabel { color: #80848e; font-size: 11px; }
+QDockWidget { background: #1e1f22; border-top: 1px solid #2e3035; }
+QDockWidget::title { background: #2b2d31; padding: 4px 8px; }
+QTextEdit { background: #18191c; color: #b5bac1; border: 1px solid #3f4147; border-radius: 8px; selection-background-color: #5865f2; }

@@ -1,0 +1,91 @@
+#include <winresrc.h>
+#include <winver.h>
+#include "resource.h"
+
+IDI_APP ICON "assets\\icon.ico"
+1 24 "app.manifest"
+
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x40004L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "yourpov.dev"
+            VALUE "FileDescription", "Auto installer for unofficial Equicord plugins"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "PluginManager.exe"
+            VALUE "LegalCopyright", "(c) 2026 yourpov.dev"
+            VALUE "OriginalFilename", "PluginManager.exe"
+            VALUE "ProductName", "Equicord Plugin Manager"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+IDD_MAIN DIALOGEX 0, 0, 520, 400
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE
+CAPTION "Equicord Plugin Manager"
+FONT 9, "Segoe UI", 400, 0, 0x0
+BEGIN
+    LTEXT           "Equicord Plugin Manager",IDC_TITLE,12,6,300,12
+    LTEXT           "Unofficial installer for userplugins Equicord does not ship.",IDC_SUBTITLE,12,18,400,8
+    LTEXT           "Equicord folder",-1,12,34,200,8
+    LTEXT           "Install to",-1,354,34,90,8
+    EDITTEXT        IDC_PATH,12,44,338,14,ES_AUTOHSCROLL | ES_READONLY | WS_TABSTOP
+    COMBOBOX        IDC_DISCORD_BRANCH,354,43,90,80,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Browse",IDC_BROWSE,448,43,60,16,BS_OWNERDRAW
+    LTEXT           "GitHub link, zip, or folder",-1,12,64,250,8
+    EDITTEXT        IDC_SOURCE,12,74,360,14,ES_AUTOHSCROLL | WS_TABSTOP
+    PUSHBUTTON      "File...",IDC_BROWSE_PLUGIN,378,73,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Install",IDC_INSTALL_SOURCE,432,73,76,16,BS_OWNERDRAW
+    LTEXT           "Drop a plugin folder, archive (zip/rar/7z/tar), or .ts / .tsx / .css file.",IDC_DROP_HINT,12,92,496,8
+    EDITTEXT        IDC_SEARCH,12,106,200,14,ES_AUTOHSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Refresh",IDC_REFRESH,218,105,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Installed",IDC_FILTER_INSTALLED,272,105,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Updates",IDC_FILTER_UPDATES,326,105,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Select all",IDC_SELECT_ALL,380,105,50,16,BS_OWNERDRAW
+    LTEXT           "My plugins and installed userplugins",-1,12,124,300,8
+    CONTROL         "",IDC_PLUGIN_LIST,"EpmPluginList",WS_TABSTOP | WS_VSCROLL,12,134,496,220
+    PUSHBUTTON      "Install selected",IDC_INSTALL_SELECTED,12,360,80,16,BS_OWNERDRAW
+    PUSHBUTTON      "Build",IDC_BUILD,96,360,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Logs",IDC_LOGS,348,360,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "Settings",IDC_SETTINGS,402,360,50,16,BS_OWNERDRAW
+    PUSHBUTTON      "About",IDC_ABOUT,456,360,50,16,BS_OWNERDRAW
+    EDITTEXT        IDC_LOG_VIEW,12,330,496,26,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL | NOT WS_VISIBLE
+    LTEXT           "Select your Equicord folder to get started.",IDC_STATUS,12,380,496,10
+END
+
+IDD_SETTINGS DIALOGEX 0, 0, 260, 128
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Settings"
+FONT 9, "Segoe UI", 400, 0, 0x0
+BEGIN
+    LTEXT           "Personal plugins.json URL or file (optional)",-1,8,8,244,8
+    EDITTEXT        IDC_SETTINGS_URL,8,18,244,14,ES_AUTOHSCROLL | WS_TABSTOP
+    AUTOCHECKBOX    "Rebuild Equicord after install / remove",IDC_SETTINGS_AUTO,8,40,244,12
+    AUTOCHECKBOX    "Use pnpm build --dev",IDC_SETTINGS_DEV,8,56,244,12
+    DEFPUSHBUTTON   "Save",IDOK,148,100,50,16
+    PUSHBUTTON      "Cancel",IDCANCEL,202,100,50,16
+END
+
+IDD_ABOUT DIALOGEX 0, 0, 260, 132
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 9, "Segoe UI", 400, 0, 0x0
+BEGIN
+    LTEXT           "Equicord Plugin Manager",-1,12,10,236,12
+    LTEXT           "Made to install unofficial Equicord plugins\n\nCreated by https://yourpov.dev/\n\nDrop a plugin folder, ZIP/RAR/7Z, or paste a GitHub link",-1,12,26,236,70
+    DEFPUSHBUTTON   "OK",IDOK,200,110,48,14
+END

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{8F3A1C2E-9B47-4D6A-A1E8-7C5D2B9F4E01}</ProjectGuid>
+    <RootNamespace>EquicordPluginManager</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)build\</OutDir>
+    <IntDir>$(SolutionDir)build\obj\$(Configuration)\</IntDir>
+    <TargetName>PluginManager</TargetName>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>user32.lib;gdi32.lib;comctl32.lib;ole32.lib;uuid.lib;shell32.lib;shlwapi.lib;dwmapi.lib;winhttp.lib;advapi32.lib;comdlg32.lib;gdiplus.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>wWinMainCRTStartup</EntryPointSymbol>
+    </Link>
+    <PostBuildEvent>
+      <Command>if exist "$(ProjectDir)plugins.json" copy /Y "$(ProjectDir)plugins.json" "$(OutDir)"
+if exist "$(ProjectDir)samples" xcopy /E /I /Y "$(ProjectDir)samples" "$(OutDir)samples"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;UNICODE;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>user32.lib;gdi32.lib;comctl32.lib;ole32.lib;uuid.lib;shell32.lib;shlwapi.lib;dwmapi.lib;winhttp.lib;advapi32.lib;comdlg32.lib;gdiplus.lib;uxtheme.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>wWinMainCRTStartup</EntryPointSymbol>
+    </Link>
+    <PostBuildEvent>
+      <Command>if exist "$(ProjectDir)plugins.json" copy /Y "$(ProjectDir)plugins.json" "$(OutDir)"
+if exist "$(ProjectDir)samples" xcopy /E /I /Y "$(ProjectDir)samples" "$(OutDir)samples"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\core\archive.cpp" />
+    <ClCompile Include="src\core\builder.cpp" />
+    <ClCompile Include="src\core\equicord.cpp" />
+    <ClCompile Include="src\core\manifest.cpp" />
+    <ClCompile Include="src\core\paths.cpp" />
+    <ClCompile Include="src\core\persist.cpp" />
+    <ClCompile Include="src\core\plugin.cpp" />
+    <ClCompile Include="src\core\runner.cpp" />
+    <ClCompile Include="src\net\http.cpp" />
+    <ClCompile Include="src\ui\log.cpp" />
+    <ClCompile Include="src\ui\pluginList.cpp" />
+    <ClCompile Include="src\ui\theme.cpp" />
+    <ClCompile Include="src\ui\window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\archive.h" />
+    <ClInclude Include="include\builder.h" />
+    <ClInclude Include="include\config.h" />
+    <ClInclude Include="include\equicord.h" />
+    <ClInclude Include="include\http.h" />
+    <ClInclude Include="include\json.h" />
+    <ClInclude Include="include\log.h" />
+    <ClInclude Include="include\manifest.h" />
+    <ClInclude Include="include\outcome.h" />
+    <ClInclude Include="include\paths.h" />
+    <ClInclude Include="include\persist.h" />
+    <ClInclude Include="include\plugin.h" />
+    <ClInclude Include="include\pluginList.h" />
+    <ClInclude Include="include\runner.h" />
+    <ClInclude Include="include\text.h" />
+    <ClInclude Include="include\theme.h" />
+    <ClInclude Include="include\win32.h" />
+    <ClInclude Include="include\window.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
