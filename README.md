@@ -1,13 +1,24 @@
+<div align="center">
+
 ![banner](assets/banner.png)
 
 # Equicord Plugin Manager
-**Auto installer for unofficial Equicord plugins** — by [yourpov.dev](https://yourpov.dev)
+
+**Auto installer for unofficial Equicord plugins**
 
 Equicord comes with its own plugins, This installs the ones it doesn't. easily install plugins people post on GitHub or send you as a zip. Normally you'd move folders and run build commands yourself, this does it in one click.
 
-> Note: You need Equicord already installed.
+> Note: You need [Equicord](https://equicord.org/) already installed.
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Language](https://img.shields.io/badge/Go-Golang-00ADD8?logo=go&logoColor=white)
+
+
+
+</div>
 
 ## Usage
+
 1. `File > Settings`: set your Equicord folder path and pick your Discord (Stable, PTB, Canary etc)
 2. Drag the plugin on the window (supports `folders`, `.zip`, `.rar`, `.7z` and `github links`)
 3. Press **Install**
@@ -15,15 +26,18 @@ Equicord comes with its own plugins, This installs the ones it doesn't. easily i
 Discord closes, plugin gets added, Equicord rebuilds, Discord reopens. (the run time takes a minute or two)
 
 ## Warning
+
 Unofficial plugins are unauthorized code from strangers running inside your Discord. Only install ones you trust. This app doesn't check what a plugin does.
 
 ## Notes
+
 - GitHub `tree` links fetch that folder directly from the repo
 - Only copies `.ts` / `.tsx` / `.css`
 - Installs `node` and `pnpm` for you if its missing
 - Installs plugins to `src/userplugins/`
 
 ## Build
+
 Needs VS2022, CMake, and Qt 6.8:
 ```bash
 pip install aqtinstall
