@@ -13,7 +13,7 @@ Equicord comes with its own plugins, This installs the ones it doesn't. easily i
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Language](https://img.shields.io/badge/Go-Golang-00ADD8?logo=go&logoColor=white)
 
-
+<img width="722" height="552" alt="image" src="https://github.com/user-attachments/assets/f3d4904d-195c-4633-bbf7-3ba642a60de2" />
 
 </div>
 
