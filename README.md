@@ -50,4 +50,4 @@ Output: `build/EquicordPluginManager.exe` + Qt DLLs
 
 ## License
 
-[MIT](LICENSE) © [YourPOV](https://github.com/yourpov) - Qt is LGPLv3, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+[MIT](LICENSE) © [YourPOV](https://github.com/yourpovv) - Qt is LGPLv3, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
