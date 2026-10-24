@@ -284,7 +284,9 @@ Outcome builder::build(const std::string& equicordRoot, bool devMode, const std:
         onLine(devMode ? "Running pnpm build --dev..." : "Running pnpm build...");
     Outcome built = runPnpm(equicordRoot, args, onLine);
     if (!built.succeeded) {
-        built.userMessage = incompatiblePluginMessage(built.detail);
+        std::string msg = incompatiblePluginMessage(built.detail);
+        if (!msg.empty())
+            built.userMessage = msg;
         return built;
     }
     return ok("Equicord built.");
