@@ -29,6 +29,8 @@
 #define IDC_LOG_VIEW         1020
 #define IDC_STATUS           1021
 
+#define IDC_DOWNLOAD_EQUICORD 1023
+
 #define IDC_SETTINGS_URL     1101
 #define IDC_SETTINGS_AUTO    1102
 #define IDC_SETTINGS_DEV     1103

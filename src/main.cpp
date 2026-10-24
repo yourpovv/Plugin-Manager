@@ -1,14 +1,18 @@
+#include "archive.h"
 #include "builder.h"
 #include "config.h"
 #include "equicord.h"
+#include "http.h"
 #include "log.h"
 #include "manifest.h"
 #include "paths.h"
 #include "persist.h"
 #include "plugin.h"
 #include "text.h"
+#include "win32.h"
 #include "window.h"
 #include <atomic>
+#include <fstream>
 #include <mutex>
 #include <process.h>
 #include <shobjidl.h>
@@ -357,7 +361,78 @@ static void applySettings(const std::string& packed) {
     refreshCatalog();
 }
 
+static std::string equicordDownloadRoot() {
+    wchar_t buf[MAX_PATH];
+    DWORD n = GetEnvironmentVariableW(L"LOCALAPPDATA", buf, MAX_PATH);
+    if (n == 0 || n >= MAX_PATH)
+        return paths::ensureTempFolder();
+    return paths::join(utf8FromWide(buf), "EquicordPluginManager");
+}
+
+static void startDownloadEquicord() {
+    if (jobRunning) {
+        ui::toast("Wait for the current operation to finish.", true);
+        return;
+    }
+    jobRunning = true;
+    std::thread([]() {
+        ui::setBusy(true, "Downloading Equicord...");
+        logLine("INFO", "Downloading latest Equicord from GitHub...");
+
+        http::Response resp = http::get(
+            "https://github.com/Equicord/Equicord/archive/refs/heads/main.zip",
+            64u * 1024u * 1024u
+        );
+        if (!resp.succeeded) {
+            logLine("ERROR", resp.userMessage);
+            ui::toast("Equicord download failed. Check your internet connection.", true);
+            ui::setBusy(false, "");
+            jobRunning = false;
+            return;
+        }
+
+        logLine("INFO", "Extracting...");
+        std::string downloadRoot = equicordDownloadRoot();
+        paths::ensureFolder(downloadRoot);
+
+        std::string zipPath = paths::join(downloadRoot, "equicord-main.zip");
+        {
+            std::ofstream f(wideFromUtf8(zipPath).c_str(), std::ios::binary);
+            if (!f || !f.write(resp.body.data(), (std::streamsize)resp.body.size())) {
+                logLine("ERROR", "Couldn't write download to disk.");
+                ui::toast("Not enough disk space to save Equicord.", true);
+                ui::setBusy(false, "");
+                jobRunning = false;
+                return;
+            }
+        }
+
+        std::string stagingDir = paths::join(downloadRoot, "Equicord-staging");
+        Outcome extracted = archive::extractArchive(zipPath, stagingDir);
+        if (!extracted.succeeded) {
+            logLine("ERROR", extracted.userMessage);
+            ui::toast("Failed to unzip Equicord.", true);
+            ui::setBusy(false, "");
+            jobRunning = false;
+            return;
+        }
+
+        std::string equicordRoot = archive::unwrapGithubFolder(stagingDir);
+        if (equicordRoot.empty())
+            equicordRoot = stagingDir;
+
+        logLine("OK", "Equicord downloaded successfully.");
+        applyEquicordPath(equicordRoot);
+        ui::setBusy(false, "");
+        jobRunning = false;
+    }).detach();
+}
+
 static void handleCommand(const std::string& command) {
+    if (command == "download-equicord") {
+        startDownloadEquicord();
+        return;
+    }
     if (command == "browse") {
         std::string folder = pickEquicordFolder();
         if (!folder.empty())

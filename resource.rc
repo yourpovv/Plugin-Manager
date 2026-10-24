@@ -43,7 +43,8 @@ BEGIN
     LTEXT           "Unofficial installer for userplugins Equicord does not ship.",IDC_SUBTITLE,12,18,400,8
     LTEXT           "Equicord folder",-1,12,34,200,8
     LTEXT           "Install to",-1,354,34,90,8
-    EDITTEXT        IDC_PATH,12,44,338,14,ES_AUTOHSCROLL | ES_READONLY | WS_TABSTOP
+    EDITTEXT        IDC_PATH,12,44,256,14,ES_AUTOHSCROLL | ES_READONLY | WS_TABSTOP
+    PUSHBUTTON      "Download",IDC_DOWNLOAD_EQUICORD,272,43,78,16,BS_OWNERDRAW
     COMBOBOX        IDC_DISCORD_BRANCH,354,43,90,80,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Browse",IDC_BROWSE,448,43,60,16,BS_OWNERDRAW
     LTEXT           "GitHub link, zip, or folder",-1,12,64,250,8

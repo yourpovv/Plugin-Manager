@@ -186,6 +186,7 @@ void captureAnchors(HWND hwnd) {
     initialHeight = client.bottom;
     Anchor specs[] = {
         { IDC_PATH, true, false, false, false },
+        { IDC_DOWNLOAD_EQUICORD, false, false, true, false },
         { IDC_DISCORD_BRANCH, false, false, true, false },
         { IDC_BROWSE, false, false, true, false },
         { IDC_SOURCE, true, false, false, false },
@@ -259,6 +260,7 @@ void paintOwnerButton(const DRAWITEMSTRUCT* item) {
 
 void setBusyVisual(bool on) {
     pluginList::setEnabled(!on);
+    EnableWindow(GetDlgItem(hwndMain, IDC_DOWNLOAD_EQUICORD), !on);
     EnableWindow(GetDlgItem(hwndMain, IDC_BROWSE), !on);
     EnableWindow(GetDlgItem(hwndMain, IDC_BROWSE_PLUGIN), !on);
     EnableWindow(GetDlgItem(hwndMain, IDC_INSTALL_SOURCE), !on);
@@ -350,6 +352,7 @@ void wireControls(HWND hwnd) {
     SendMessageW(GetDlgItem(hwnd, IDC_SOURCE), EM_SETCUEBANNER, TRUE, (LPARAM)L"https://github.com/user/repo/tree/main/myPlugin");
     SendMessageW(GetDlgItem(hwnd, IDC_SEARCH), EM_SETCUEBANNER, TRUE, (LPARAM)L"Search");
 
+    addOwnerButton(GetDlgItem(hwnd, IDC_DOWNLOAD_EQUICORD), theme::panel, theme::cardHover);
     addOwnerButton(GetDlgItem(hwnd, IDC_BROWSE), theme::accent, theme::accentHover);
     addOwnerButton(GetDlgItem(hwnd, IDC_BROWSE_PLUGIN), theme::panel, theme::cardHover);
     addOwnerButton(GetDlgItem(hwnd, IDC_INSTALL_SOURCE), theme::accent, theme::accentHover);
@@ -379,6 +382,7 @@ void wireControls(HWND hwnd) {
 
 void onCommand(int id) {
     switch (id) {
+        case IDC_DOWNLOAD_EQUICORD: sendCommand("download-equicord"); break;
         case IDC_BROWSE: sendCommand("browse"); break;
         case IDC_BROWSE_PLUGIN: sendCommand("browse-plugin"); break;
         case IDC_INSTALL_SOURCE: sendCommand("install-source:" + getEditText(GetDlgItem(hwndMain, IDC_SOURCE))); break;
