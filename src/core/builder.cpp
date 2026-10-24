@@ -109,6 +109,25 @@ static Outcome runPnpm(
     return ok();
 }
 
+static bool runGit(const std::string& equicordRoot, const std::wstring& args) {
+    std::string gitPath = searchPath(L"git.exe");
+    if (gitPath.empty())
+        return false;
+    std::wstring cmd = L"cmd.exe /C \"\"" + wideFromUtf8(gitPath) + L"\" " + args + L"\"";
+    runner::RunResult r = runner::runCaptured(cmd, equicordRoot, {});
+    return r.started && r.exitCode == 0;
+}
+
+static void ensureGitRepo(const std::string& equicordRoot, const std::function<void(const std::string&)>& onLine) {
+    if (paths::folderExists(paths::join(equicordRoot, ".git")))
+        return;
+    if (onLine)
+        onLine("Equicord wasn't cloned via git. creating a local repo so the build can proceed...");
+    if (!runGit(equicordRoot, L"init"))
+        return;
+    runGit(equicordRoot, L"-c user.email=build@local -c user.name=build commit --allow-empty -m init");
+}
+
 static std::string injectFailureFromOutput(const std::string& output) {
     struct Marker { const char* text; const char* message; };
     const Marker markers[] = {
@@ -206,6 +225,8 @@ Outcome builder::build(const std::string& equicordRoot, bool devMode, const std:
     Outcome deps = ensureDependencies(equicordRoot, onLine);
     if (!deps.succeeded)
         return deps;
+    addFoldersMissingFromExplorerPath();
+    ensureGitRepo(equicordRoot, onLine);
     std::wstring args = devMode ? L"build --dev" : L"build";
     if (onLine)
         onLine(devMode ? "Running pnpm build --dev..." : "Running pnpm build...");
