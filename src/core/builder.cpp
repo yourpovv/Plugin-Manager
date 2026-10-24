@@ -235,8 +235,12 @@ Outcome builder::build(const std::string& equicordRoot, bool devMode, const std:
     if (onLine)
         onLine(devMode ? "Running pnpm build --dev..." : "Running pnpm build...");
     Outcome built = runPnpm(equicordRoot, args, onLine);
-    if (!built.succeeded)
+    if (!built.succeeded) {
+        if (built.detail.find("No matching export") != std::string::npos)
+            built.userMessage = "A user plugin imports something this version of Equicord doesn't export. "
+                "Check the [BUILD] errors above to see which plugin, remove or update it, then try again.";
         return built;
+    }
     return ok("Equicord built.");
 }
 
