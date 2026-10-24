@@ -341,6 +341,49 @@ void MainWindow::startDownloadEquicord(){
   }
   std::string equicordRoot=archive::unwrapGithubFolder(stagingDir);
   if(equicordRoot.empty())equicordRoot=stagingDir;
+  {
+   std::string utilsPath=paths::join(equicordRoot,"src/webpack/common/utils.ts");
+   std::string utilsContent=paths::readFile(utilsPath);
+   const std::string oldLine="export const showToast: t.showToast = findByCodeLazy(\".currentToastMap.has(\");";
+   if(!utilsContent.empty()&&utilsContent.find(oldLine)!=std::string::npos){
+    const std::string newBlock=R"PATCH(export interface ToastData {
+    message: string,
+    id: string,
+    /**
+     * Toasts.Type
+     */
+    type: string,
+    options?: ToastOptions;
+}
+
+export interface ToastOptions {
+    /**
+     * Toasts.Position
+     */
+    position?: number;
+    component?: React.ReactNode,
+    duration?: number;
+}
+
+export const Toasts: t.Toasts = mapMangledModuleLazy(".currentToastMap.has(", {
+    show: filters.byCode(".currentToastMap.has("),
+    pop: filters.byCode(".delete(")
+});
+
+export const createToast: t.createToast = findByCodeLazy('variant:"default",icon:', ".duration");
+
+/**
+ * Show a simple toast. If you need more options, use Toasts.show manually
+ */
+export function showToast(message: string, type: t.ToastType = "message", options?: ToastOptions) {
+    Toasts.show(createToast({ message, type, options }));
+})PATCH";
+    size_t pos=utilsContent.find(oldLine);
+    utilsContent.replace(pos,oldLine.size(),newBlock);
+    paths::writeFileIfSafe(utilsPath,utilsContent,equicordRoot);
+    logLine("INFO","Patched webpack/common/utils.ts to export Toasts.");
+   }
+  }
   logLine("OK","Equicord downloaded successfully.");
   QMetaObject::invokeMethod(this,[this,equicordRoot]{
    applyEquicordPath(equicordRoot);
