@@ -119,14 +119,17 @@ static bool runGit(const std::string& equicordRoot, const std::wstring& args) {
 }
 
 static void ensureGitRepo(const std::string& equicordRoot, const std::function<void(const std::string&)>& onLine) {
-    if (paths::folderExists(paths::join(equicordRoot, ".git")))
-        return;
-    if (onLine)
-        onLine("Equicord wasn't cloned via git. creating a local repo so the build can proceed...");
-    if (!runGit(equicordRoot, L"init"))
-        return;
-    runGit(equicordRoot, L"remote add origin https://github.com/Equicord/Equicord");
-    runGit(equicordRoot, L"-c user.email=build@local -c user.name=build commit --allow-empty -m init");
+    bool hasGit = paths::folderExists(paths::join(equicordRoot, ".git"));
+    if (!hasGit) {
+        if (onLine)
+            onLine("Equicord wasn't cloned via git — creating a local repo so the build can proceed...");
+        if (!runGit(equicordRoot, L"init"))
+            return;
+    }
+    if (!runGit(equicordRoot, L"remote get-url origin"))
+        runGit(equicordRoot, L"remote add origin https://github.com/Equicord/Equicord");
+    if (!hasGit)
+        runGit(equicordRoot, L"-c user.email=build@local -c user.name=build commit --allow-empty -m init");
 }
 
 static std::string injectFailureFromOutput(const std::string& output) {
