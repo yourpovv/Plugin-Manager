@@ -216,6 +216,54 @@ Outcome builder::ensureDependencies(const std::string& equicordRoot, const std::
     return runPnpm(equicordRoot, L"install --no-frozen-lockfile", onLine);
 }
 
+static std::string incompatiblePluginMessage(const std::string& output) {
+    const std::string exportMarker = "No matching export";
+    if (output.find(exportMarker) == std::string::npos)
+        return "";
+
+    std::vector<std::string> plugins;
+    std::vector<std::string> imports;
+
+    const std::string pluginPrefix = "src/userplugins/";
+    const std::string importMarker = "for import \"";
+    size_t pos = 0;
+    while ((pos = output.find(pluginPrefix, pos)) != std::string::npos) {
+        pos += pluginPrefix.size();
+        size_t slash = output.find_first_of("/\\", pos);
+        if (slash == std::string::npos) continue;
+        std::string name = output.substr(pos, slash - pos);
+        if (std::find(plugins.begin(), plugins.end(), name) == plugins.end())
+            plugins.push_back(name);
+    }
+
+    pos = 0;
+    while ((pos = output.find(importMarker, pos)) != std::string::npos) {
+        pos += importMarker.size();
+        size_t end = output.find('"', pos);
+        if (end == std::string::npos) continue;
+        std::string name = output.substr(pos, end - pos);
+        if (std::find(imports.begin(), imports.end(), name) == imports.end())
+            imports.push_back(name);
+        pos = end + 1;
+    }
+
+    auto join = [](const std::vector<std::string>& v) {
+        std::string s;
+        for (size_t i = 0; i < v.size(); i++) {
+            if (i > 0) s += i + 1 == v.size() ? " and " : ", ";
+            s += v[i];
+        }
+        return s;
+    };
+
+    std::string msg = "Plugin" + std::string(plugins.size() != 1 ? "s " : " ");
+    msg += join(plugins);
+    msg += " import" + std::string(plugins.size() != 1 ? " " : "s ");
+    msg += join(imports);
+    msg += " which this version of Equicord doesn't export. Remove or update the plugin, then try again.";
+    return msg;
+}
+
 Outcome builder::build(const std::string& equicordRoot, bool devMode, const std::function<void(const std::string& line)>& onLine) {
     Outcome usable = checkUserplugins(equicordRoot);
     if (!usable.succeeded) {
@@ -236,9 +284,7 @@ Outcome builder::build(const std::string& equicordRoot, bool devMode, const std:
         onLine(devMode ? "Running pnpm build --dev..." : "Running pnpm build...");
     Outcome built = runPnpm(equicordRoot, args, onLine);
     if (!built.succeeded) {
-        if (built.detail.find("No matching export") != std::string::npos)
-            built.userMessage = "A user plugin imports something this version of Equicord doesn't export. "
-                "Check the [BUILD] errors above to see which plugin, remove or update it, then try again.";
+        built.userMessage = incompatiblePluginMessage(built.detail);
         return built;
     }
     return ok("Equicord built.");
