@@ -41,12 +41,16 @@ static void addFoldersMissingFromExplorerPath() {
     wchar_t appData[MAX_PATH];
     wchar_t localAppData[MAX_PATH];
     wchar_t programFiles[MAX_PATH];
+    wchar_t programFilesX86[MAX_PATH];
     GetEnvironmentVariableW(L"APPDATA", appData, MAX_PATH);
     GetEnvironmentVariableW(L"LOCALAPPDATA", localAppData, MAX_PATH);
     GetEnvironmentVariableW(L"ProgramFiles", programFiles, MAX_PATH);
+    GetEnvironmentVariableW(L"ProgramFiles(x86)", programFilesX86, MAX_PATH);
     prependPath(paths::join(utf8FromWide(programFiles), "nodejs"));
     prependPath(paths::join(utf8FromWide(appData), "npm"));
     prependPath(paths::join(utf8FromWide(localAppData), "pnpm"));
+    prependPath(paths::join(utf8FromWide(programFiles), "Git\\cmd"));
+    prependPath(paths::join(utf8FromWide(programFilesX86), "Git\\cmd"));
 }
 
 builder::ToolCheck builder::findTools() {
@@ -78,6 +82,7 @@ static Outcome runPnpm(
     std::string* capturedOutput = nullptr
 ) {
     addFoldersMissingFromExplorerPath();
+    SetEnvironmentVariableW(L"COREPACK_ENABLE_STRICT", L"0");
     builder::ToolCheck tools = builder::findTools();
     if (!tools.nodeFound || !tools.pnpmFound)
         return fail(tools.userMessage);
