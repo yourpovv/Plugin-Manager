@@ -125,6 +125,7 @@ static void ensureGitRepo(const std::string& equicordRoot, const std::function<v
         onLine("Equicord wasn't cloned via git. creating a local repo so the build can proceed...");
     if (!runGit(equicordRoot, L"init"))
         return;
+    runGit(equicordRoot, L"remote add origin https://github.com/Equicord/Equicord");
     runGit(equicordRoot, L"-c user.email=build@local -c user.name=build commit --allow-empty -m init");
 }
 
