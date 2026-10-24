@@ -61,6 +61,16 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="equicordDownloadBtn">
+       <property name="text">
+        <string>Download…</string>
+       </property>
+       <property name="toolTip">
+        <string>Download the latest Equicord source from GitHub</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

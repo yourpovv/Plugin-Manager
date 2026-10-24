@@ -20,8 +20,12 @@ public:
     QString discordBranch() const;
     void setDiscordChoices(const std::vector<builder::DiscordChannel>& channels);
 
+signals:
+    void downloadRequested();
+
 private slots:
     void onBrowseEquicord();
+    void onDownloadEquicord();
 
 private:
     Ui::SettingsDialog* ui = nullptr;

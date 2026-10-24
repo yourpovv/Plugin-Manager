@@ -60,6 +60,7 @@ private:
     void setPendingPlugin(const std::string& path);
     void setPendingPlugins(const std::vector<std::string>& paths);
     void startInstallFlow();
+    void startDownloadEquicord();
     void refreshLog();
 
     QWidget* central_ = nullptr;

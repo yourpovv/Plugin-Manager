@@ -29,7 +29,10 @@
 #include <QStyle>
 #include <QEvent>
 #include <thread>
+#include <QFile>
+#include "archive.h"
 #include "builder.h"
+#include "http.h"
 #include "config.h"
 #include "equicord.h"
 #include "log.h"
@@ -56,6 +59,7 @@ MainWindow::~MainWindow()=default;
 void MainWindow::buildMenuBar(){
  auto* file=menuBar()->addMenu("&File");
  file->addAction("Settings…",this,&MainWindow::onBrowseEquicord,QKeySequence("Ctrl+,"));
+ file->addAction("Download Equicord…",this,[this]{startDownloadEquicord();});
  file->addAction("Exit",this,&QWidget::close,QKeySequence("Ctrl+Q"));
  auto* view=menuBar()->addMenu("&View");
  view->addAction("Refresh",this,[this]{applyStatus("Ready",false,false);},QKeySequence("Ctrl+R"));
@@ -284,7 +288,10 @@ void MainWindow::onBrowseEquicord(){
  auto chans=builder::discordChannels();
  dlg.setDiscordChoices(chans);
  dlg.setDiscordBranch(toQ(cfg::discordBranch));
- if(dlg.exec()!=QDialog::Accepted)return;
+ bool downloadReq=false;
+ connect(&dlg,&SettingsDialog::downloadRequested,this,[&downloadReq]{downloadReq=true;});
+ if(dlg.exec()!=QDialog::Accepted&&!downloadReq)return;
+ if(downloadReq){startDownloadEquicord();return;}
  std::string newPath=fromQ(dlg.equicordPath());
  std::string newBranch=fromQ(dlg.discordBranch());
  if(!newPath.empty())applyEquicordPath(newPath);
@@ -292,6 +299,57 @@ void MainWindow::onBrowseEquicord(){
  persist::Settings s{cfg::equicordPath,cfg::manifestUrl,cfg::autoBuild,cfg::buildDev,cfg::discordBranch};
  persist::save(s);
  applyStatus("Settings saved",false,false);
+}
+static std::string equicordDownloadRoot(){
+ QString local=QString::fromLocal8Bit(qgetenv("LOCALAPPDATA"));
+ if(local.isEmpty())local=QDir::tempPath();
+ return (local+"/EquicordPluginManager").toUtf8().toStdString();
+}
+void MainWindow::startDownloadEquicord(){
+ if(jobRunning_){applyStatus("Wait for the current operation to finish.",true,false);return;}
+ jobRunning_=true;
+ applyBusy(true,"Downloading Equicord…");
+ applyProgress(5);
+ if(logView_&&!logView_->isVisible()){logView_->setVisible(true);if(logToggleBtn_)logToggleBtn_->setText("Hide log");}
+ std::thread([this]{
+  logLine("INFO","Downloading latest Equicord from GitHub…");
+  http::Response resp=http::get("https://github.com/Equicord/Equicord/archive/refs/heads/main.zip",64u*1024u*1024u);
+  if(!resp.succeeded){
+   logLine("ERROR",resp.userMessage);
+   QMetaObject::invokeMethod(this,[this]{applyStatus("Equicord download failed. Check your internet connection.",true,false);applyBusy(false,"");applyProgress(-1);},Qt::QueuedConnection);
+   jobRunning_=false;return;
+  }
+  QMetaObject::invokeMethod(this,[this]{applyStatus("Extracting Equicord…",false,false);applyProgress(65);},Qt::QueuedConnection);
+  logLine("INFO","Extracting…");
+  std::string downloadRoot=equicordDownloadRoot();
+  paths::ensureFolder(downloadRoot);
+  std::string zipPath=paths::join(downloadRoot,"equicord-main.zip");
+  {
+   QFile f(toQ(zipPath));
+   if(!f.open(QIODevice::WriteOnly)||f.write(resp.body.data(),(qint64)resp.body.size())!=(qint64)resp.body.size()){
+    logLine("ERROR","Couldn't write download to disk.");
+    QMetaObject::invokeMethod(this,[this]{applyStatus("Not enough disk space to save Equicord.",true,false);applyBusy(false,"");applyProgress(-1);},Qt::QueuedConnection);
+    jobRunning_=false;return;
+   }
+  }
+  std::string stagingDir=paths::join(downloadRoot,"Equicord-staging");
+  Outcome extracted=archive::extractArchive(zipPath,stagingDir);
+  if(!extracted.succeeded){
+   logLine("ERROR",extracted.userMessage);
+   QMetaObject::invokeMethod(this,[this]{applyStatus("Failed to unzip Equicord.",true,false);applyBusy(false,"");applyProgress(-1);},Qt::QueuedConnection);
+   jobRunning_=false;return;
+  }
+  std::string equicordRoot=archive::unwrapGithubFolder(stagingDir);
+  if(equicordRoot.empty())equicordRoot=stagingDir;
+  logLine("OK","Equicord downloaded successfully.");
+  QMetaObject::invokeMethod(this,[this,equicordRoot]{
+   applyEquicordPath(equicordRoot);
+   applyBusy(false,"");
+   applyProgress(100);
+   QTimer::singleShot(800,this,[this]{applyProgress(-1);});
+  },Qt::QueuedConnection);
+  jobRunning_=false;
+ }).detach();
 }
 void MainWindow::onBrowsePlugin(){std::string p=pickPluginPathSingleDialog();if(!p.empty()){linkEdit_->setText(toQ(p));setPendingPlugin(p);}}
 void MainWindow::onSourceChanged(){updateInstallButton();}

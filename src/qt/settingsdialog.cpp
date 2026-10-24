@@ -21,6 +21,7 @@ SettingsDialog::SettingsDialog(QWidget* parent)
     ui->equicordLabel->setBuddy(ui->equicordEdit);
     ui->discordLabel->setBuddy(ui->discordCombo);
     connect(ui->equicordBrowseBtn, &QPushButton::clicked, this, &SettingsDialog::onBrowseEquicord);
+    connect(ui->equicordDownloadBtn, &QPushButton::clicked, this, &SettingsDialog::onDownloadEquicord);
 }
 
 SettingsDialog::~SettingsDialog() {
@@ -58,6 +59,11 @@ void SettingsDialog::setDiscordChoices(const std::vector<builder::DiscordChannel
         else if (c.patched) lbl += " (patched)";
         ui->discordCombo->addItem(lbl, QString::fromUtf8(c.branch.c_str()));
     }
+}
+
+void SettingsDialog::onDownloadEquicord() {
+    emit downloadRequested();
+    accept();
 }
 
 void SettingsDialog::onBrowseEquicord() {
